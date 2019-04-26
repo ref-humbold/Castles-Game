@@ -1,86 +1,88 @@
 # -*- coding: utf-8 -*-
 
-from math import cos, tan, radians
 import pygame
-from .utils import bound
+from math import cos, radians, tan
+
 from .graphics import HEAVEN_COLOUR
+from .utils import bound
 
 
-class Cannon():
-    __IMAGE = pygame.image.load("images/armata.jpg").convert_alpha()
+class Cannon:
+    _IMAGE = pygame.image.load("images/armata.jpg").convert_alpha()
 
     def __init__(self, position):
-        self.__image = self.__IMAGE
+        self._image = self._IMAGE
         self.position = (position[0] + 11, position[1] + 7)
         self.angle = 0.0
 
     @property
     def size(self):
-        return self.__image.get_size()
+        return self._image.get_size()
 
     def change_angle(self, diff):
         """Zmienia kąt armaty w zamku.
         :param diff: zmiana kąta"""
         self.angle = bound(0.0, self.angle + diff, 180.0)
-        self.__image = pygame.transform.rotate(self.__IMAGE, self.angle)
+        self._image = pygame.transform.rotate(self._IMAGE, self.angle)
 
 
-class CannonBallGraphic():
-    __COLOUR = (0, 0, 0)
+class CannonBallGraphic:
+    _COLOUR = (0, 0, 0)
 
     def __init__(self, screen, castle):
-        self.__screen = screen
-        self.__angle = castle.angle
-        self.__start_pos = (None, None)
-        self.__current_pos = [None, None]
-        self.__speed = castle.speed * 0.75 * abs(cos(radians(self.__angle)))
+        self._screen = screen
+        self._angle = castle.angle
+        self._start_pos = (None, None)
+        self._current_pos = [None, None]
+        self._speed = castle.speed * 0.75 * abs(cos(radians(self._angle)))
 
     def move(self):
-        if self.__angle == 90:
-            hmax = max(0, self.__start_pos[1] - int(self.__speed * self.__speed / (2 * 9.81)))
+        if self._angle == 90:
+            hmax = max(
+                0, self._start_pos[1] - int(self._speed * self._speed / (2 * 9.81)))
 
-            while self.__current_pos[1] > hmax:
-                self.__draw()
-                self.__current_pos[1] -= 2
+            while self._current_pos[1] > hmax:
+                self._draw()
+                self._current_pos[1] -= 2
 
-            while self.__current_pos[1] + 2 < self.__start_pos[1]:
-                self.__current_pos[1] += 2
-                self.__draw()
+            while self._current_pos[1] + 2 < self._start_pos[1]:
+                self._current_pos[1] += 2
+                self._draw()
         else:
-            while 0 < self.__current_pos[0] < self.__screen.get_size()[0]:
-                if self.__current_pos[1] >= 0:
-                    self.__draw()
+            while 0 < self._current_pos[0] < self._screen.get_size()[0]:
+                if self._current_pos[1] >= 0:
+                    self._draw()
 
-                self.__make_move()
+                self._make_move()
 
     def __draw(self):
-        self.__draw_shape(self.__COLOUR)
+        self._draw_shape(self._COLOUR)
         pygame.display.update()
         pygame.time.delay(50)
-        self.__draw_shape(HEAVEN_COLOUR)
+        self._draw_shape(HEAVEN_COLOUR)
         pygame.display.update()
 
     def __draw_shape(self, colour):
-        pygame.draw.line(self.__screen, colour,
-                         (self.__current_pos[0] - 2, self.__current_pos[1] - 2),
-                         (self.__current_pos[0] - 2, self.__current_pos[1] + 2))
-        pygame.draw.line(self.__screen, colour,
-                         (self.__current_pos[0] - 1, self.__current_pos[1] - 2),
-                         (self.__current_pos[0] - 1, self.__current_pos[1] + 2))
-        pygame.draw.line(self.__screen, colour,
-                         (self.__current_pos[0], self.__current_pos[1] - 2),
-                         (self.__current_pos[0], self.__current_pos[1] + 2))
-        pygame.draw.line(self.__screen, colour,
-                         (self.__current_pos[0] + 1, self.__current_pos[1] - 2),
-                         (self.__current_pos[0] + 1, self.__current_pos[1] + 2))
+        pygame.draw.line(self._screen, colour,
+                         (self._current_pos[0] - 2, self._current_pos[1] - 2),
+                         (self._current_pos[0] - 2, self._current_pos[1] + 2))
+        pygame.draw.line(self._screen, colour,
+                         (self._current_pos[0] - 1, self._current_pos[1] - 2),
+                         (self._current_pos[0] - 1, self._current_pos[1] + 2))
+        pygame.draw.line(self._screen, colour,
+                         (self._current_pos[0], self._current_pos[1] - 2),
+                         (self._current_pos[0], self._current_pos[1] + 2))
+        pygame.draw.line(self._screen, colour,
+                         (self._current_pos[0] + 1, self._current_pos[1] - 2),
+                         (self._current_pos[0] + 1, self._current_pos[1] + 2))
 
     def __make_move(self):
-        dirsign = 1 if self.__angle < 90 else -1
-        self.__current_pos[0] += dirsign * 2
-        self.__current_pos[1] = self.__parabola(self.__current_pos[0])
+        dirsign = 1 if self._angle < 90 else -1
+        self._current_pos[0] += dirsign * 2
+        self._current_pos[1] = self._parabola(self._current_pos[0])
 
     def __parabola(self, x_pos):
-        y_diff = x_pos * tan(radians(self.__angle)) \
-            - 9.81 * x_pos * x_pos / (2 * self.__speed * self.__speed)
+        y_diff = x_pos * tan(radians(self._angle)) \
+                 - 9.81 * x_pos * x_pos / (2 * self._speed * self._speed)
 
-        return self.__start_pos[1] - int(y_diff)
+        return self._start_pos[1] - int(y_diff)
