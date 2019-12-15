@@ -1,13 +1,13 @@
 #! /bin/python3
 # -*- coding: utf-8 -*-
 
-import pygame
-from pygame.locals import *
 import dbm.ndbm
-import threading
+from math import cos, pi, sin, sqrt, tan
 from os import _exit
-from random import randint, choice
-from math import pi, sqrt, sin, cos, tan
+from random import choice, randint
+import threading
+
+import pygame
 
 
 def intervalize(a, x, b):
@@ -51,10 +51,10 @@ class Game:
 
             y = intervalize(54, y + 16 * d, 586)
 
-        castle_imgs = [pygame.image.load("images/zamek_bronze.jpg").convert(),
-                       pygame.image.load("images/zamek_green.jpg").convert(),
-                       pygame.image.load("images/zamek_red.jpg").convert(),
-                       pygame.image.load("images/zamek_violet.jpg").convert()]
+        castle_imgs = [pygame.image.load("images/castle_bronze.jpg").convert(),
+                       pygame.image.load("images/castle_green.jpg").convert(),
+                       pygame.image.load("images/castle_red.jpg").convert(),
+                       pygame.image.load("images/castle_violet.jpg").convert()]
 
         for i, ply in enumerate(self.list_players):
             for j in range(3):
@@ -138,8 +138,13 @@ class Game:
 
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         x, y = pygame.mouse.get_pos()
-                        castle_mouse = [(i, j) for i in range(len(self.list_players)) for j in range(len(self.list_players[i].castle_pos)) if self.list_players[i].castle_pos[j]
-                                        [0] - 5 <= x <= self.list_players[i].castle_pos[j][0] + 26 and self.list_players[i].castle_pos[j][1] - 5 <= y <= self.list_players[i].castle_pos[j][1] + 21]
+                        castle_mouse = [(i, j) for i in range(len(self.list_players)) for j in
+                                        range(len(self.list_players[i].castle_pos)) if
+                                        self.list_players[i].castle_pos[j]
+                                        [0] - 5 <= x <= self.list_players[i].castle_pos[j][
+                                            0] + 26 and self.list_players[i].castle_pos[j][
+                                            1] - 5 <= y <= self.list_players[i].castle_pos[j][
+                                            1] + 21]
                         if castle_mouse:
                             p, c = castle_mouse[0]
                             print("ZAMEK NUMER", c, "GRACZA", p, ":")
@@ -157,7 +162,9 @@ class Game:
                         elif event.key == pygame.K_TAB:
                             P.erase_castle_sign(self.act_castle[self.playing])
                             self.act_castle[self.playing] = (
-                                self.act_castle[self.playing] + 1) % len(P.castle_pos)
+                                                                    self.act_castle[
+                                                                        self.playing] + 1) % len(
+                                P.castle_pos)
                             P.draw_castle_sign(self.act_castle[self.playing])
                             self.text_angle = self.render_value(
                                 P.angles[self.act_castle[self.playing]])
@@ -207,7 +214,9 @@ class Game:
 
         end_font = pygame.font.SysFont("arial", 60)
         endtxt = end_font.render("KONIEC GRY", 0, (0, 0, 0), (255, 255, 255))
-        wintxt = end_font.render("WYGRANA", 0, (0, 0, 0), (255, 255, 255)) if human_won and self.list_players[self.playing].castle_pos else end_font.render(
+        wintxt = end_font.render("WYGRANA", 0, (0, 0, 0), (255, 255, 255)) if human_won and \
+                                                                              self.list_players[
+                                                                                  self.playing].castle_pos else end_font.render(
             "PRZEGRANA", 0, (0, 0, 0), (255, 255, 255))
         self.screen.blit(endtxt, (350, 200))
         self.screen.blit(wintxt, (350, 300))
@@ -251,7 +260,7 @@ class Player:
     def make_armat(self, cpos):
         """Tworzy obraz armaty dla zamku
         :param cpos: pozycja zamku gracza"""
-        img = pygame.image.load("castles/images/armata.jpg").convert_alpha()
+        img = pygame.image.load("castles/images/cannon.jpg").convert_alpha()
         pos = (cpos[0] + 11, cpos[1] + 7)
         self.armat_img = img
         self.armat_pos.append(pos)
@@ -277,8 +286,11 @@ class Player:
             self.angles[castle] = self.angles[castle] + diff
             rads = self.angles[castle] * pi / 180
             new_arm_img = pygame.transform.rotate(self.armat_img, self.angles[castle])
-            new_arm_pos = (self.armat_pos[castle][0], int(self.armat_pos[castle][1] - 6 * sin(rads))) if self.angles[castle] <= 90 else (
-                int(self.armat_pos[castle][0] + 6 * cos(rads)), int(self.armat_pos[castle][1] - 6 * sin(rads)))
+            new_arm_pos = (
+                self.armat_pos[castle][0], int(self.armat_pos[castle][1] - 6 * sin(rads))) if \
+                self.angles[castle] <= 90 else (
+                int(self.armat_pos[castle][0] + 6 * cos(rads)),
+                int(self.armat_pos[castle][1] - 6 * sin(rads)))
             self.all_armats[castle] = (new_arm_img, new_arm_pos)
             self.game.screen.blit(self.castle_img, self.castle_pos[castle])
             self.game.screen.blit(new_arm_img, new_arm_pos)
@@ -347,7 +359,9 @@ class Player:
 
                 y = fdist(x)
 
-                while 0 < start_x + x < len(self.game.background) and self.game.background[start_x + x][0] - int(bool(self.game.background[start_x + x][1])) * 16 > y:
+                while 0 < start_x + x < len(self.game.background) and \
+                        self.game.background[start_x + x][0] - int(
+                    bool(self.game.background[start_x + x][1])) * 16 > y:
                     if y >= 0:
                         self.draw_bullet(start_x + x, y)
                         pygame.display.update()
@@ -362,13 +376,18 @@ class Player:
                 self.game.screen.blit(self.all_armats[castle][0], self.all_armats[castle][1])
                 pygame.display.update()
 
-                if 0 < start_x + x < len(self.game.background) and self.game.background[start_x + x][0] - 16 < y < self.game.background[start_x + x][0] and self.game.background[start_x + x][1] != ():
+                if 0 < start_x + x < len(self.game.background) and \
+                        self.game.background[start_x + x][0] - 16 < y < \
+                        self.game.background[start_x + x][0] and self.game.background[start_x + x][
+                    1] != ():
                     i = self.game.background[start_x + x][1][0]
                     j = self.game.background[start_x + x][1][1]
                     self.game.screen.blit(
-                        self.game.list_players[i].castle_img, self.game.list_players[i].castle_pos[j])
+                        self.game.list_players[i].castle_img,
+                        self.game.list_players[i].castle_pos[j])
                     self.game.screen.blit(
-                        self.game.list_players[i].all_armats[j][0], self.game.list_players[i].all_armats[j][1])
+                        self.game.list_players[i].all_armats[j][0],
+                        self.game.list_players[i].all_armats[j][1])
                     pygame.display.update()
                     self.game.list_players[i].hit(j, self.speeds[castle])
 

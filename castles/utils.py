@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+G_ACC = 9.81
 
-class Pos:
+
+class Vector2D:
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y
@@ -9,6 +11,32 @@ class Pos:
     @property
     def tuple(self):
         return self.x, self.y
+
+    def __iadd__(self, other):
+        if type(other) == Vector2D:
+            other = other.tuple
+
+        self.x += other[0]
+        self.y += other[1]
+
+    def __add__(self, other):
+        if type(other) == Vector2D:
+            other = other.tuple
+
+        return Vector2D(self.x + other[0], self.y + other[1])
+
+    def __isub__(self, other):
+        if type(other) == Vector2D:
+            other = other.tuple
+
+        self.x -= other[0]
+        self.y -= other[1]
+
+    def __sub__(self, other):
+        if type(other) == Vector2D:
+            other = other.tuple
+
+        return Vector2D(self.x - other[0], self.y - other[1])
 
 
 class Colour:
