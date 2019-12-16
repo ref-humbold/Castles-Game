@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from app.utils import Colour
 from graphic.graphics import GROUND_COLOUR
 

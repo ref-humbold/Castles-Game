@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from math import cos, radians, tan
 
 from app.utils import Colour, G_ACC, Vector2D
