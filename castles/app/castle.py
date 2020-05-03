@@ -4,10 +4,9 @@ from app.utils import Vector2D, bound
 
 
 class Castle:
-    def __init__(self, x_pos, y_pos, image):
-        self.position = Vector2D(x_pos, y_pos)
+    def __init__(self, x, y, image):
+        self.position = Vector2D(x, y)
         self.image = image
-        self.actual = False
         self.life = 100
         self.speed = 20.0
         self.cannon = Cannon(self.position.x + self.image.get_size[0] // 2,

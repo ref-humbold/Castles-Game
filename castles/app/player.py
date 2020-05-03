@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from abc import ABCMeta
 
-from graphic.graphics import load_image
+from app.utils import load_image
 
 
 class Player(metaclass=ABCMeta):

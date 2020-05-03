@@ -20,10 +20,10 @@ class CannonBallGraphic:
     def throw(self):
         if self._is_vertical:
             # Vertical throw
-            hmax_diff = self._speed * self._speed / (2 * G_ACC)
-            hmax = max(0, self._start_pos.y - int(hmax_diff))
+            max_height_diff = self._speed * self._speed / (2 * G_ACC)
+            max_height = max(0, self._start_pos.y - int(max_height_diff))
 
-            while self._current_pos.y > hmax:
+            while self._current_pos.y > max_height:
                 self._draw()
                 self._current_pos -= (0, 2)
 
@@ -50,6 +50,6 @@ class CannonBallGraphic:
 
     def _draw_shape(self, colour):
         for dx in range(-self._HALF_SIZE, self._HALF_SIZE):
-            self._graphics.line(self._current_pos + (dx, -self._HALF_SIZE),
-                                self._current_pos + (dx, self._HALF_SIZE),
-                                colour.tuple)
+            self._graphics.line(self._current_pos + Vector2D(dx, -self._HALF_SIZE),
+                                self._current_pos + Vector2D(dx, self._HALF_SIZE),
+                                tuple(colour))

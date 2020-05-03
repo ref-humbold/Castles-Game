@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pygame
 
 G_ACC = 9.81
 
@@ -8,35 +9,23 @@ class Vector2D:
         self.x = x
         self.y = y
 
-    @property
-    def tuple(self):
-        return self.x, self.y
+    def __iter__(self):
+        yield self.x
+        yield self.y
 
     def __iadd__(self, other):
-        if type(other) == Vector2D:
-            other = other.tuple
-
-        self.x += other[0]
-        self.y += other[1]
+        self.x += other.x
+        self.y += other.y
 
     def __add__(self, other):
-        if type(other) == Vector2D:
-            other = other.tuple
-
-        return Vector2D(self.x + other[0], self.y + other[1])
+        return Vector2D(self.x + other.x, self.y + other.y)
 
     def __isub__(self, other):
-        if type(other) == Vector2D:
-            other = other.tuple
-
-        self.x -= other[0]
-        self.y -= other[1]
+        self.x -= other.x
+        self.y -= other.y
 
     def __sub__(self, other):
-        if type(other) == Vector2D:
-            other = other.tuple
-
-        return Vector2D(self.x - other[0], self.y - other[1])
+        return Vector2D(self.x - other.x, self.y - other.y)
 
 
 class Colour:
@@ -45,9 +34,14 @@ class Colour:
         self._g = g
         self._b = b
 
-    @property
-    def tuple(self):
-        return self._r, self._g, self._b
+    def __iter__(self):
+        yield self._r
+        yield self._g
+        yield self._b
+
+
+def load_image(filename):
+    pygame.image.load(filename).convert()
 
 
 def bound(minimum, elem, maximum):
