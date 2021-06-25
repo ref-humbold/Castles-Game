@@ -3,10 +3,10 @@ from random import randint
 
 import pygame
 
-from app.utils import Colour, Vector2D, bound
+from app.utils import crop
 
-HEAVEN_COLOUR = Colour(0, 127, 255)
-GROUND_COLOUR = Colour(255, 255, 0)
+HEAVEN_COLOR = pygame.Color(0, 127, 255)
+GROUND_COLOR = pygame.Color(255, 255, 0)
 
 
 class Graphics:
@@ -15,7 +15,7 @@ class Graphics:
 
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((self.WINDOW_X_SIZE, self.WINDOW_Y_SIZE))
+        self.screen = pygame.display.set_mode(size=(self.WINDOW_X_SIZE, self.WINDOW_Y_SIZE))
         self.font = pygame.font.SysFont("arial", 24)
         pygame.display.set_caption("CASTLES GAME")
 
@@ -25,17 +25,17 @@ class Graphics:
         if delay > 0:
             pygame.time.delay(delay)
 
-    def line(self, from_pos, to_pos, colour=None):
-        if colour is None:
-            colour = Colour(0, 0, 0)
+    def line(self, from_pos, to_pos, color=None):
+        if color is None:
+            color = pygame.Color(0, 0, 0)
 
-        pygame.draw.line(self.screen, tuple(colour), tuple(from_pos), tuple(to_pos))
+        pygame.draw.line(self.screen, color, from_pos.as_tuple(), to_pos.as_tuple())
 
-    def text(self, value, position, colour=None):
-        if colour is None:
-            colour = Colour(0, 0, 0)
+    def text(self, value, position, color=None):
+        if color is None:
+            color = pygame.Color(0, 0, 0)
 
-        rendered_text = self.font.render(str(value), 0, colour)
+        rendered_text = self.font.render(value, False, color)
         self.screen.blit(rendered_text, position)
 
 
@@ -45,13 +45,13 @@ class Background:
         self._heights = []
 
     def draw(self):
-        self._graphics.screen.fill(tuple(HEAVEN_COLOUR))
+        self._graphics.screen.fill(HEAVEN_COLOR)
         self._create()
 
         for x, height in enumerate(self._heights):
-            self._graphics.line(Vector2D(x, self._graphics.WINDOW_Y_SIZE),
-                                Vector2D(x, height),
-                                tuple(GROUND_COLOUR))
+            self._graphics.line(pygame.Vector2(x, self._graphics.WINDOW_Y_SIZE),
+                                pygame.Vector2(x, height),
+                                GROUND_COLOR)
 
     def _create(self):
         current_height = randint(self._graphics.WINDOW_Y_SIZE // 2,
@@ -61,5 +61,5 @@ class Background:
             diff = randint(-4, 4)
 
             for column in range(1, 17):
-                current_height = bound(54, current_height + column * diff, 586)
+                current_height = crop(54, current_height + column * diff, 586)
                 self._heights.append(current_height)

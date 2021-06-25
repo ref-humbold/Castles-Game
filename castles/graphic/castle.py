@@ -1,34 +1,38 @@
 # -*- coding: utf-8 -*-
-from app.utils import Colour, Vector2D
-from graphic.graphics import GROUND_COLOUR
+import pygame
+
+from graphic.graphics import GROUND_COLOR
 
 
 class CastleGraphic:
-    _ACTIVE_COLOUR = Colour(48, 48, 48)
-    _INACTIVE_COLOUR = Colour(128, 128, 128)
+    _ACTIVE_COLOR = pygame.Color(48, 48, 48)
+    _INACTIVE_COLOR = pygame.Color(128, 128, 128)
 
     def __init__(self, graphics, castle):
         self._graphics = graphics
         self._castle = castle
 
     def draw_active_sign(self):
-        self._draw_sign_shape(self._ACTIVE_COLOUR)
+        self._draw_sign_shape(self._ACTIVE_COLOR)
 
     def draw_inactive_sign(self):
-        self._draw_sign_shape(self._INACTIVE_COLOUR)
+        self._draw_sign_shape(self._INACTIVE_COLOR)
 
     def erase_sign(self):
-        self._draw_sign_shape(GROUND_COLOUR)
+        self._draw_sign_shape(GROUND_COLOR)
 
     def draw_info(self):
-        self._graphics.text(f"LIFE:   {self._castle.life}", Vector2D(10, 10))
-        self._graphics.text(f"ANGLE:  {self._castle.cannon.angle}", Vector2D(10, 40))
-        self._graphics.text(f"SPEED:  {self._castle.speed}", Vector2D(10, 70))
+        self._graphics.text(f"LIFE:   {self._castle.life}", pygame.Vector2(10, 10))
+        self._graphics.text(f"ANGLE:  {self._castle.cannon.angle}", pygame.Vector2(10, 40))
+        self._graphics.text(f"SPEED:  {self._castle.speed}", pygame.Vector2(10, 70))
 
-    def _draw_sign_shape(self, colour):
-        pos = self._castle.position + (10, 24)
+    def _draw_sign_shape(self, color):
+        pos = self._castle.position + pygame.Vector2(10, 24)
 
         for diff in range(7):
-            self._graphics.line(pos + Vector2D(diff, 6), pos + Vector2D(diff, diff), tuple(colour))
-            self._graphics.line(pos + Vector2D(-diff, 6), pos + Vector2D(-diff, diff),
-                                tuple(colour))
+            self._graphics.line(pos + pygame.Vector2(diff, 6),
+                                pos + pygame.Vector2(diff, diff),
+                                color)
+            self._graphics.line(pos + pygame.Vector2(-diff, 6),
+                                pos + pygame.Vector2(-diff, diff),
+                                color)
