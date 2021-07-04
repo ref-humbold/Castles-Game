@@ -19,28 +19,29 @@ class Graphics:
         self.font = pygame.font.SysFont("arial", 24)
         pygame.display.set_caption("CASTLES GAME")
 
-    def update(self, delay=0):
-        pygame.display.update()
-
-        if delay > 0:
-            pygame.time.delay(delay)
-
-    def line(self, from_pos, to_pos, color=None):
+    def line(self, from_pos: pygame.Vector2, to_pos: pygame.Vector2, color: pygame.Color = None):
         if color is None:
             color = pygame.Color(0, 0, 0)
 
-        pygame.draw.line(self.screen, color, from_pos.as_tuple(), to_pos.as_tuple())
+        pygame.draw.line(self.screen, color, from_pos, to_pos)
 
-    def text(self, value, position, color=None):
+    def text(self, value: str, position: pygame.Vector2, color: pygame.Color = None):
         if color is None:
             color = pygame.Color(0, 0, 0)
 
         rendered_text = self.font.render(value, False, color)
         self.screen.blit(rendered_text, position)
 
+    @staticmethod
+    def update(delay: int = 0):
+        pygame.display.update()
+
+        if delay > 0:
+            pygame.time.delay(delay)
+
 
 class Background:
-    def __init__(self, graphics):
+    def __init__(self, graphics: Graphics):
         self._graphics = graphics
         self._heights = []
 

@@ -3,21 +3,22 @@ from math import cos, radians, tan
 
 import pygame
 
+from app.castle import Castle
 from app.utils import G_ACC
-from graphic.graphics import HEAVEN_COLOR
+from graphic.graphics import Graphics, HEAVEN_COLOR
 
 
 class CannonBallGraphic:
     _COLOR = pygame.Color(0, 0, 0)
     _SIZE = 4
 
-    def __init__(self, graphics, castle):
+    def __init__(self, graphics: Graphics, castle: Castle):
         self._graphics = graphics
         self._is_vertical = castle.angle == 90.0
         self._angle = radians(castle.angle)
         self._speed = castle.speed
         self._start_pos = castle.cannon.end
-        self._current_pos = pygame.Vector2(self._start_pos.x, self._start_pos.y)
+        self._current_pos = castle.cannon.end
 
     def throw(self):
         if self._is_vertical:
