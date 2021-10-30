@@ -7,11 +7,12 @@ from app.utils import crop
 
 HEAVEN_COLOR = pygame.Color(0, 127, 255)
 GROUND_COLOR = pygame.Color(255, 255, 0)
+BASIC_COLOR = pygame.Color(0, 0, 0)
 
 
 class Graphics:
-    WINDOW_X_SIZE = 1024
-    WINDOW_Y_SIZE = 640
+    WINDOW_X_SIZE = 1600
+    WINDOW_Y_SIZE = 900
 
     def __init__(self):
         pygame.init()
@@ -19,16 +20,10 @@ class Graphics:
         self.font = pygame.font.SysFont("arial", 24)
         pygame.display.set_caption("CASTLES GAME")
 
-    def line(self, from_pos: pygame.Vector2, to_pos: pygame.Vector2, color: pygame.Color = None):
-        if color is None:
-            color = pygame.Color(0, 0, 0)
+    def line(self, start: pygame.Vector2, end: pygame.Vector2, color: pygame.Color = BASIC_COLOR):
+        pygame.draw.line(self.screen, color, start, end)
 
-        pygame.draw.line(self.screen, color, from_pos, to_pos)
-
-    def text(self, value: str, position: pygame.Vector2, color: pygame.Color = None):
-        if color is None:
-            color = pygame.Color(0, 0, 0)
-
+    def text(self, value: str, position: pygame.Vector2, color: pygame.Color = BASIC_COLOR):
         rendered_text = self.font.render(value, False, color)
         self.screen.blit(rendered_text, position)
 
@@ -41,6 +36,9 @@ class Graphics:
 
 
 class Background:
+    _UNIT_DIVISOR = 8
+    _STEP_DIVISOR = 64
+
     def __init__(self, graphics: Graphics):
         self._graphics = graphics
         self._heights = []
@@ -54,13 +52,19 @@ class Background:
                                 pygame.Vector2(x, height),
                                 GROUND_COLOR)
 
+        self._graphics.update()
+
     def _create(self):
-        current_height = randint(self._graphics.WINDOW_Y_SIZE // 2,
-                                 7 * self._graphics.WINDOW_Y_SIZE // 8)
+        unit = self._graphics.WINDOW_Y_SIZE // self._UNIT_DIVISOR
+        min_height = 2 * unit
+        max_height = (self._UNIT_DIVISOR - 1) * unit
+        drawing_step = self._graphics.WINDOW_X_SIZE // self._STEP_DIVISOR
+        max_diff = self._UNIT_DIVISOR - 1
+        current_height = randint(min_height + unit, max_height - unit)
 
-        for _ in range(0, self._graphics.WINDOW_X_SIZE, 16):
-            diff = randint(-4, 4)
+        for _ in range(0, self._graphics.WINDOW_X_SIZE, drawing_step):
+            diff = randint(-max_diff, max_diff)
 
-            for column in range(1, 17):
-                current_height = crop(54, current_height + column * diff, 586)
+            for _ in range(1, drawing_step + 1):
+                current_height = crop(min_height, current_height + diff, max_height)
                 self._heights.append(current_height)
