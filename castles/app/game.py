@@ -6,6 +6,7 @@ from graphic.graphics import Background, Graphics
 
 class Game:
     def __init__(self):
+        self.players = []
         self._graphics = Graphics()
         self._playing = False
 
@@ -14,13 +15,16 @@ class Game:
         background.draw()
         self._playing = True
 
+    def play(self):
+        self.start()
+
         while self._playing:
             for event in pygame.event.get():
                 self._graphics.update()
 
                 if event.type == pygame.QUIT:
-                    self.end_game()
-                    break
+                    self.end()
+                    return
 
-    def end_game(self):
+    def end(self):
         self._playing = False

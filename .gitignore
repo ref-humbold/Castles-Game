@@ -1,7 +1,16 @@
-# [ Python ]
-# Python output
 __pycache__/
 *.pyc
 
-# PyCharm
+.venv/
+venv/
+
+nose2-junit.xml
+
+docs/build
+docs/source/*.rst
+!docs/source/index.rst
+
+.vscode
+*.code-workspace
+
 .idea

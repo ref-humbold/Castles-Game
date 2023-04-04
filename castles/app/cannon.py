@@ -10,11 +10,11 @@ class Cannon:
     def __init__(self, x: float, y: float):
         self.position = pygame.Vector2(x, y)
         self.angle = 0.0
-        self._image = self._BASE_IMAGE
+        self.image = self._BASE_IMAGE
 
     @property
     def end(self) -> pygame.Vector2:
-        x, y = self._image.get_size()
+        x, y = self.image.get_size()
 
         if self.angle == 0.0:
             vector = pygame.Vector2(x, 0)
@@ -31,4 +31,4 @@ class Cannon:
 
     def change_angle(self, diff: float):
         self.angle = crop(0.0, self.angle + diff, 180.0)
-        self._image = pygame.transform.rotate(self._BASE_IMAGE, self.angle)
+        self.image = pygame.transform.rotate(self._BASE_IMAGE, self.angle)

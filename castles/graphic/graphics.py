@@ -4,6 +4,7 @@ from random import randint
 import pygame
 
 from app.utils import crop
+from graphic.castle import CastleGraphic
 
 HEAVEN_COLOR = pygame.Color(0, 127, 255)
 GROUND_COLOR = pygame.Color(255, 255, 0)
@@ -41,18 +42,27 @@ class Background:
 
     def __init__(self, graphics: Graphics):
         self._graphics = graphics
-        self._heights = []
+        self.heights = []
 
     def draw(self):
         self._graphics.screen.fill(HEAVEN_COLOR)
         self._create()
 
-        for x, height in enumerate(self._heights):
+        for x, height in enumerate(self.heights):
             self._graphics.line(pygame.Vector2(x, self._graphics.WINDOW_Y_SIZE),
                                 pygame.Vector2(x, height),
                                 GROUND_COLOR)
 
         self._graphics.update()
+
+    def draw_castle(self, castle: CastleGraphic):
+        width = castle.image.get_width()
+        x_placement = (castle.castle.position.x - width // 2,
+                       castle.castle.position.x + width // 2 + 1)
+        level = min(self.heights[x] for x in range(x_placement[0], x_placement[1]))
+        self.heights[x_placement[0]:x_placement[1]] = [level] * (x_placement[1] - x_placement[0])
+        self._graphics.screen.blit(castle.image,
+                                   pygame.Vector2(x_placement[0], castle.castle.position.y))
 
     def _create(self):
         unit = self._graphics.WINDOW_Y_SIZE // self._UNIT_DIVISOR
@@ -67,4 +77,4 @@ class Background:
 
             for _ in range(1, drawing_step + 1):
                 current_height = crop(min_height, current_height + diff, max_height)
-                self._heights.append(current_height)
+                self.heights.append(current_height)

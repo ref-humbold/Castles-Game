@@ -6,13 +6,11 @@ from app.utils import crop
 
 
 class Castle:
-    def __init__(self, x: float, y: float, image: pygame.Surface):
+    def __init__(self, x: float, y: float):
         self.position = pygame.Vector2(x, y)
-        self.image = image
         self.life = 100
         self.speed = 20.0
-        self.cannon = Cannon(self.position.x + self.image.get_width() // 2,
-                             self.position.y + self.image.get_height() // 2)
+        self.cannon = Cannon(self.position.x, self.position.y)
 
     @property
     def angle(self) -> float:
